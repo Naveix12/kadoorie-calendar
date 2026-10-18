@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>לוח מבחנים כדורי</title>
+<meta name="description" content="מבחנים, טיולים וימי חופש בכדורי לפי כיתה ומגמה, עם הוספה ליומן והורדה להדפסה.">
+<meta property="og:title" content="לוח מבחנים כדורי">
+<meta property="og:description" content="בוחרים כיתה ומגמה ורואים את כל המבחנים והטיולים של השנה.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#1f5f8b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='5' width='26' height='24' rx='4' fill='%231f5f8b'/%3E%3Crect x='3' y='5' width='26' height='7' rx='3' fill='%23143f5e'/%3E%3Crect x='8' y='16' width='5' height='4' rx='1' fill='%23fff'/%3E%3Crect x='16' y='16' width='5' height='4' rx='1' fill='%23fff'/%3E%3Crect x='8' y='22' width='5' height='4' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+{{FONTCSS}}
+/* Layout: school diary — "whose calendar?" setup card, a toolbar of months, then one month-grid (or agenda list on phones) per month */
+:root{
+  --bg:#f5f6f2; --surface:#ffffff; --surface2:#eef1ec; --ink:#1c2420; --muted:#5d6862; --line:#d5dcd6; --line2:#e6ebe6;
+  --accent:#1f5f8b; --accent-ink:#ffffff; --accent-soft:#e3eef6;
+  --off:#e9ece6; --we:#f2f4f0; --today:#fff2b8; --out:#fafbf8;
+  --trip:#2f7d32; --trip-ink:#ffffff;
+  --k0-bg:#fbeedd; --k0-bar:#b4650f; --k0-ink:#8a4c0b;
+  --k1-bg:#dcf2ee; --k1-bar:#0f7a6c; --k1-ink:#0b5f54;
+  --k2-bg:#f6e3ee; --k2-bar:#8a3b6b; --k2-ink:#702f57;
+  --k3-bg:#e1ecf7; --k3-bar:#2f6fae; --k3-ink:#24578a;
+  --k4-bg:#fbf4d2; --k4-bar:#a68a00; --k4-ink:#6f5c00;
+  --f-display:"KSecular","Secular One","KHeebo","Heebo",system-ui,sans-serif;
+  --f-body:"KHeebo","Heebo",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111513; --surface:#191f1c; --surface2:#202824; --ink:#e6ece8; --muted:#9aa59f; --line:#2f3934; --line2:#252d29;
+  --accent:#7cb6e2; --accent-ink:#0d1a24; --accent-soft:#1b2c39;
+  --off:#232a26; --we:#161b18; --today:#3b3518; --out:#141816;
+  --trip:#6fcf74; --trip-ink:#0f1f10;
+  --k0-bg:#3a2a17; --k0-bar:#f0a85a; --k0-ink:#f6c48d;
+  --k1-bg:#15332f; --k1-bar:#5fd0bf; --k1-ink:#8fe3d6;
+  --k2-bg:#3a2131; --k2-bar:#e59bc8; --k2-ink:#f0bfdc;
+  --k3-bg:#1a2a3d; --k3-bar:#7fb0e6; --k3-ink:#a9cbf0;
+  --k4-bg:#353014; --k4-bar:#e0c447; --k4-ink:#efdc85;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#111513; --surface:#191f1c; --surface2:#202824; --ink:#e6ece8; --muted:#9aa59f; --line:#2f3934; --line2:#252d29;
+  --accent:#7cb6e2; --accent-ink:#0d1a24; --accent-soft:#1b2c39;
+  --off:#232a26; --we:#161b18; --today:#3b3518; --out:#141816;
+  --trip:#6fcf74; --trip-ink:#0f1f10;
+  --k0-bg:#3a2a17; --k0-bar:#f0a85a; --k0-ink:#f6c48d;
+  --k1-bg:#15332f; --k1-bar:#5fd0bf; --k1-ink:#8fe3d6;
+  --k2-bg:#3a2131; --k2-bar:#e59bc8; --k2-ink:#f0bfdc;
+  --k3-bg:#1a2a3d; --k3-bar:#7fb0e6; --k3-ink:#a9cbf0;
+  --k4-bg:#353014; --k4-bar:#e0c447; --k4-ink:#efdc85;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;direction:rtl}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
+button{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* header */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--accent);padding-bottom:12px}
+.top h1{font-family:var(--f-display);font-weight:400;font-size:2.1rem;line-height:1.05;margin:0;text-wrap:balance}
+.top h1 span{color:var(--accent)}
+.top p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
+.asof{font-size:.82rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 10px;white-space:nowrap}
+
+/* setup */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.panel h2{font-family:var(--f-display);font-weight:400;font-size:1.35rem;margin:0}
+.kids{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.kid{border:1px solid var(--line);border-inline-start:5px solid var(--kbar);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:12px;min-width:0;background:var(--surface)}
+.kid-top{display:flex;align-items:center;gap:8px}
+.kid-top .tag{font-weight:700;color:var(--kink);background:var(--kbg);border-radius:6px;padding:2px 9px;font-size:.9rem;white-space:nowrap}
+.kname{flex:1;min-width:0;font:inherit;font-size:.95rem;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+.rm{border:0;background:none;color:var(--muted);font-size:.85rem;text-decoration:underline;cursor:pointer;padding:4px}
+.fld{display:flex;flex-direction:column;gap:6px}
+.lab{font-size:.78rem;font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{min-width:42px;height:40px;padding:0 10px;border:1.5px solid var(--line);background:var(--surface);border-radius:9px;font-weight:700;font-size:1rem;cursor:pointer;font-variant-numeric:tabular-nums}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.9rem;font-weight:600;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--kbg);border-color:var(--kbar);color:var(--kink)}
+.fnote{margin:0;font-size:.8rem;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 16px;font-weight:700;cursor:pointer;font-size:.95rem;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.small{padding:6px 12px;font-size:.88rem}
+
+.kc0{--kbg:var(--k0-bg);--kbar:var(--k0-bar);--kink:var(--k0-ink)}
+.kc1{--kbg:var(--k1-bg);--kbar:var(--k1-bar);--kink:var(--k1-ink)}
+.kc2{--kbg:var(--k2-bg);--kbar:var(--k2-bar);--kink:var(--k2-ink)}
+.kc3{--kbg:var(--k3-bg);--kbar:var(--k3-bar);--kink:var(--k3-ink)}
+.kc4{--kbg:var(--k4-bg);--kbar:var(--k4-bar);--kink:var(--k4-ink)}
+
+/* summary + toolbar */
+.summary{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.kchip{background:var(--kbg);color:var(--kink);border-inline-start:4px solid var(--kbar);border-radius:8px;padding:5px 11px;font-size:.95rem}
+.kchip b{font-weight:800}
+.toolbar{display:flex;flex-direction:column;gap:10px}
+.trow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.months{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin;min-width:0;flex:1 1 420px}
+.months button{flex:0 0 auto;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-weight:700;font-size:.9rem;cursor:pointer}
+.months button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.months .all{background:none;border-style:dashed;color:var(--muted)}
+.opts{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.vseg{display:inline-flex;border:1.5px solid var(--line);border-radius:9px;overflow:hidden}
+.vseg button{border:0;background:var(--surface);padding:6px 12px;font-weight:700;font-size:.88rem;cursor:pointer}
+.vseg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.sw{display:inline-flex;align-items:center;gap:6px;font-size:.88rem;color:var(--muted);cursor:pointer}
+.sw input{width:18px;height:18px;accent-color:var(--accent)}
+.shareout{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.shareout input{font:inherit;font-size:.82rem;direction:ltr;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface2);color:var(--ink);width:min(100%,360px)}
+.msg{font-size:.85rem;color:var(--muted)}
+.calpanel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;max-width:760px}
+.calpanel h3{margin:0;font-size:1.05rem}
+.feeds{display:flex;flex-direction:column;gap:8px}
+.feed{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--kbg);border-inline-start:4px solid var(--kbar)}
+.feed>b{color:var(--kink);min-width:3.2em}
+.calpanel ol{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:6px;font-size:.92rem}
+.gadd{font-size:.72rem;font-weight:700;color:var(--accent);text-decoration:none;border:1px solid var(--accent);border-radius:5px;padding:0 5px;margin-inline-start:6px;white-space:nowrap;vertical-align:1px}
+.track{display:flex;flex-direction:column;gap:5px}
+.track .tn{font-size:.75rem;color:var(--muted)}
+.hint{background:var(--accent-soft);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:.92rem}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.82rem;color:var(--muted);align-items:center}
+.tg{display:inline-block;font-style:normal;font-size:.68rem;font-weight:800;padding:0 5px;border-radius:4px;margin-inline-start:4px;vertical-align:1px;line-height:1.5;white-space:nowrap}
+.tg.trip{background:var(--trip);color:var(--trip-ink)}
+.tg.maj{border:1px solid var(--accent);color:var(--accent)}
+.tg.part{border:1px solid var(--muted);color:var(--muted)}
+
+/* month */
+.month{display:flex;flex-direction:column;gap:8px}
+.mh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.mh h2{font-family:var(--f-display);font-weight:400;font-size:1.9rem;margin:0;line-height:1.1}
+.mh h2 span{color:var(--accent);font-size:1.25rem}
+.mh p{margin:0;color:var(--muted);font-size:.9rem;font-weight:600}
+.gridwrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(118px,1fr)) minmax(70px,.55fr) minmax(70px,.55fr);min-width:760px}
+.grid .wd{font-size:.8rem;font-weight:700;color:var(--muted);background:var(--surface2);padding:6px 8px;border-bottom:1px solid var(--line)}
+.grid .c{min-height:108px;padding:6px 6px 8px;border-bottom:1px solid var(--line2);border-inline-start:1px solid var(--line2);display:flex;flex-direction:column;gap:4px;min-width:0}
+.grid .c:nth-child(7n+1){border-inline-start:0}
+.grid .c.we{background:var(--we)}
+.grid .c.out{background:var(--out)}
+.grid .c.out .n{color:var(--line)}
+.grid .c.off{background:var(--off)}
+.grid .c.today{box-shadow:inset 0 0 0 2px var(--accent)}
+.grid .c.today .n{background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:0 6px}
+.grid .c.past>*:not(.n){opacity:.5}
+.n{font-weight:800;font-size:.95rem;font-variant-numeric:tabular-nums;align-self:flex-start;line-height:1.5}
+.note{font-size:.78rem;font-weight:700;color:var(--muted);line-height:1.3}
+.ev{font-size:.8rem;line-height:1.3;background:var(--kbg);border-inline-start:3px solid var(--kbar);border-radius:4px;padding:3px 6px;overflow-wrap:anywhere}
+.ev b{color:var(--kink);font-weight:800;margin-inline-end:3px}
+.ev.k-x,.ev.k-t{font-weight:600}
+.ev.k-n{font-weight:700;color:var(--muted)}
+.ev .tm{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+
+/* list */
+.list{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.row{display:grid;grid-template-columns:62px minmax(0,1fr);border-bottom:1px solid var(--line2)}
+.row:last-child{border-bottom:0}
+.row .d{padding:10px 8px;text-align:center;border-inline-end:1px solid var(--line2);background:var(--surface2)}
+.row .d b{display:block;font-size:1.35rem;line-height:1;font-variant-numeric:tabular-nums}
+.row .d span{font-size:.78rem;color:var(--muted);font-weight:700}
+.row .body{padding:8px 10px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.row .ev{font-size:.92rem;padding:5px 9px}
+.row.off .d{background:var(--off)}
+.row.today .d{background:var(--accent);color:var(--accent-ink)}
+.row.today .d span{color:var(--accent-ink)}
+.row.past{opacity:.55}
+.orig{display:block;font-size:.75rem;color:var(--muted);font-weight:400;margin-top:2px}
+.empty{padding:14px;color:var(--muted);font-size:.92rem}
+
+.ws{display:none}
+.daydetail{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.grid .c.has{cursor:pointer}
+.grid .c.sel{box-shadow:inset 0 0 0 2px var(--ink)}
+@media (max-width:759px){
+  .gridwrap{overflow:hidden}
+  .grid{min-width:0;grid-template-columns:repeat(7,minmax(0,1fr))}
+  .grid .wd{padding:5px 0;text-align:center;font-size:.75rem}
+  .wl{display:none}.ws{display:inline}
+  .grid .c{min-height:66px;padding:3px 2px 4px;gap:2px}
+  .grid .c .n{font-size:.78rem;align-self:center}
+  .grid .ev{font-size:.58rem;line-height:1.2;padding:1px 2px;border-inline-start-width:2px;border-radius:3px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-weight:600}
+  .grid .ev b{display:block;margin:0}
+  .grid .ev .tg,.grid .ev .tm{display:none}
+  .grid .note{font-size:.56rem;line-height:1.15;text-align:center}
+}
+footer{color:var(--muted);font-size:.82rem;border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:4px}
+footer a{color:var(--accent)}
+@media (max-width:520px){.top h1{font-size:1.7rem}.mh h2{font-size:1.55rem}.kids{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:no-preference){.btn,.seg button,.chips button,.months button{transition:background-color .12s,border-color .12s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>לוח מבחנים <span>כדורי</span></h1>
+      <p>מבחנים, טיולים וימי חופש לפי כיתה ומגמה · שנת הלימודים תשפ״ז</p>
+    </div>
+    <span class="asof" id="asof">מעודכן ל־{{ASOF}}</span>
+  </header>
+
+  <section class="panel" id="setup" aria-label="בחירת כיתות"></section>
+  <div class="summary" id="summary" hidden></div>
+
+  <div class="toolbar" id="toolbar">
+    <div class="trow">
+      <div class="months" id="months" role="group" aria-label="חודשים"></div>
+      <div class="opts">
+        <div class="vseg" role="group" aria-label="תצוגה">
+          <button type="button" id="v-grid" data-act="view" data-v="grid">לוח חודשי</button>
+          <button type="button" id="v-list" data-act="view" data-v="list">רשימה</button>
+        </div>
+      </div>
+    </div>
+    <div class="trow">
+      <div class="legend">
+        <span><i class="tg trip">טיול</i> יציאה מבית הספר</span>
+        <span><i class="tg maj">מגמה</i> מבחן של המגמה שנבחרה</span>
+        <span><i class="tg part">חלקי</i> רק לחלק מהכיתה (הקבצה, גוש, נבצרים)</span>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn small primary" id="pdf" hidden>הורדת PDF להדפסה</button>
+        <button type="button" class="btn small" id="calbtn" hidden aria-expanded="false" aria-controls="calpanel">הוספה ליומן</button>
+        <button type="button" class="btn small" id="copy" hidden>העתקת קישור</button>
+        <a class="btn small" id="wa" hidden target="_blank" rel="noopener">שליחה בוואטסאפ</a>
+      </div>
+    </div>
+    <div class="shareout" id="shareout" hidden><input type="text" id="sharelink" readonly aria-label="קישור ללוח"><span class="msg" id="sharemsg"></span></div>
+    <div class="msg" id="pdfmsg" aria-live="polite"></div>
+    <div class="calpanel" id="calpanel" hidden>
+      <h3>הוספה ליומן בטלפון או במחשב</h3>
+      <p class="fnote" style="font-size:.88rem;color:var(--ink)">לוחצים פעם אחת, וכל המבחנים והטיולים של השנה נכנסים ליומן. כשהלוח מתעדכן, גם היומן מתעדכן לבד.</p>
+      <div id="feeds" class="feeds"></div>
+      <ol>
+        <li><b>אייפון / מק:</b> לוחצים "אייפון" ומאשרים "הרשמה" (Subscribe). אם פתחתם את האתר מתוך וואטסאפ ולא קורה כלום, פותחים אותו בספארי ולוחצים שוב.</li>
+        <li><b>Google Calendar:</b> לוחצים "Google" ומאשרים "הוספה". באנדרואיד הכי טוב לעשות את זה פעם אחת מהמחשב (או מדפדפן Chrome במצב "אתר למחשב"). אחרי ההוספה היומן מופיע לבד גם באפליקציה בטלפון. אם הוא לא מופיע, מסמנים אותו ברשימת היומנים.</li>
+        <li><b>רק מבחן אחד:</b> בתצוגת "רשימה" יש ליד כל מועד קישור "+ Google".</li>
+      </ol>
+    </div>
+    </div>
+  </div>
+
+  <div id="out"></div>
+
+  <footer>
+    <span>המועדים נלקחו מיומני השכבות הרשמיים של כדורי ומעודכנים ל־{{ASOF}}. בית הספר מעדכן את היומנים מדי פעם, אז כדאי לבדוק מועד חשוב גם ב<a href="https://sites.google.com/hityash.org.il/events/%D7%91%D7%99%D7%AA" target="_blank" rel="noopener">יומן האירועים של כדורי</a>.</span>
+    <span>הבחירה נשמרת בדפדפן הזה בלבד.</span>
+  </footer>
+</div>
+
+<script>const DATA={{DATA}};const BASE="{{BASE}}";</script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const GR=[[7,"ז"],[8,"ח"],[9,"ט"],[10,"י"],[11,"יא"],[12,"יב"]];
+const GL=Object.fromEntries(GR);
+const SUBJ={ph:"פיזיקה",cs:"מחשבים",me:"מכטרוניקה",bi:"ביולוגיה",co:"תקשורת והפקות",th:"תיאטרון",ar:"אמנות",ge:"גאוגרפיה",en:"מדעי הסביבה",ch:"כימיה",tr:"תחבורה",au:"אוטוטק",ps:"פסיכולוגיה",so:"מדעי החברה",ab:"ערבית"};
+/* the 16 majors as listed on kadoorie.mashov.info, grouped by track; third item = calendar subjects that belong to the major */
+const TRACKS=[
+ ["נתיב טכנולוגי",[["me","מכטרוניקה",["me"]],["tr","אוטוטק",["tr","au"]],["cs","מדעי המחשב ופיזיקה",["cs","ph"]],["ad","אמנויות העיצוב",["ar"]],["co","תקשורת הפקות",["co"]]]],
+ ["נתיב מדעי",[["bc","ביולוגיה וכימיה",["bi","ch"]],["be","ביולוגיה ומדעי הסביבה",["bi","en"]],["ba","ביולוגיה וחקלאות",["bi"]]]],
+ ["נתיב עיוני",[["ge","גיאוגרפיה",["ge"]],["di","דיפלומטיה",[]],["so","מדעי החברה",["so","ps"]],["ab","ערבית",["ab"]],["th","תיאטרון",["th"]]]]];
+const MAJ=TRACKS.flatMap(t=>t[1]);
+const ML=Object.fromEntries(MAJ.map(m=>[m[0],m[1]]));
+const MSUB=Object.fromEntries(MAJ.map(m=>[m[0],m[2]]));
+const SHORT=Object.fromEntries(MAJ.map(m=>[m[0],m[1]]));
+const OLD={ph:"cs",bi:"ba",ch:"bc",en:"be",ar:"ad",au:"tr",ps:"so",bv:"ba",de:"ad"};
+const fixM=a=>[...new Set((a||[]).map(x=>ML[x]?x:OLD[x]).filter(Boolean))].slice(0,1);
+const MN=["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"];
+const MS=["ינו׳","פבר׳","מרץ","אפר׳","מאי","יוני","יולי","אוג׳","ספט׳","אוק׳","נוב׳","דצמ׳"];
+const WD=["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
+const WDS=["א׳","ב׳","ג׳","ד׳","ה׳","ו׳","ש׳"];
+const YEAR=["2026-09","2026-10","2026-11","2026-12","2027-01","2027-02","2027-03","2027-04","2027-05","2027-06","2027-07"];
+const KEY="kadoorie-cal-v1", MAXK=5;
+const PAL=[["#fbeedd","#b4650f","#8a4c0b"],["#dcf2ee","#0f7a6c","#0b5f54"],["#f6e3ee","#8a3b6b","#702f57"],["#e1ecf7","#2f6fae","#24578a"],["#fbf4d2","#a68a00","#6f5c00"]];
+
+const today=(()=>{try{return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jerusalem",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date())}catch(e){return new Date().toISOString().slice(0,10)}})();
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const iso=dt=>dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+const pd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+function rangeDates(a,b){const out=[];const d=pd(a),e=pd(b);while(d<=e){out.push(iso(d));d.setDate(d.getDate()+1)}return out}
+function defaultMonths(){const ym=today.slice(0,7);let i=YEAR.indexOf(ym);if(i<0)i=ym<YEAR[0]?0:YEAR.length-2;return YEAR.slice(i,Math.min(i+2,YEAR.length))}
+const kidLabel=k=>(k.name&&k.name.trim())?k.name.trim():(k.g?GL[k.g]+(k.c||""):"");
+const classLabel=k=>k.g?GL[k.g]+(k.c||""):"";
+const complete=k=>!!(k&&k.g&&k.c);
+
+/* ---------- state ---------- */
+let S={kids:[],months:null,view:null,whole:false,editing:true};
+try{const v=JSON.parse(localStorage.getItem(KEY)||"null");if(v&&typeof v==="object"){if(Array.isArray(v.kids))S.kids=v.kids;if(Array.isArray(v.months))S.months=v.months;if(v.view)S.view=v.view;S.whole=!!v.whole;S.editing=!!v.editing}}catch(e){}
+function parseHash(h){
+  h=(h||"").replace(/^#/,"");if(!h)return null;
+  const kids=[];
+  for(const part of h.split("_")){
+    const m=part.match(/^(\d{1,2})-(\d{1,2})(?:-([a-z.]+))?$/);if(!m)return null;
+    const g=+m[1],c=+m[2];if(!GL[g]||c<1||c>15)return null;
+    kids.push({g,c,m:g>=10?fixM((m[3]||"").split(".")):[],name:""});
+  }
+  return kids.length?kids.slice(0,MAXK):null;
+}
+const fromHash=parseHash(location.hash);
+if(fromHash){S.kids=fromHash;S.editing=false}
+S.kids=(S.kids||[]).filter(k=>k&&typeof k==="object").map(k=>({g:GL[k.g]?k.g:null,c:Number.isInteger(k.c)?k.c:null,m:k.g>=10?fixM(k.m):[],name:typeof k.name==="string"?k.name.slice(0,16):""})).slice(0,MAXK);
+if(!S.kids.length){S.kids=[{g:null,c:null,m:[],name:""}];S.editing=true}
+if(!S.kids.some(complete))S.editing=true;
+S.months=(S.months||[]).filter(m=>YEAR.includes(m));if(!S.months.length)S.months=defaultMonths();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+/* ---------- setup ---------- */
+function kidHTML(k,i){
+  const nums=[];for(let n=1;n<=11;n++)nums.push(n);
+  return `<div class="kid kc${i}">
+    <div class="kid-top"><span class="tag">${esc(classLabel(k)||"ילד "+(i+1))}</span><span style="flex:1"></span>
+      ${S.kids.length>1?`<button type="button" class="rm" data-act="rm" data-i="${i}">הסרה</button>`:""}</div>
+    <div class="fld"><span class="lab">שכבה</span><div class="seg" role="group" aria-label="שכבה">${GR.map(([g,l])=>`<button type="button" data-act="g" data-i="${i}" data-v="${g}" aria-pressed="${k.g===g}">${l}</button>`).join("")}</div></div>
+    ${k.g?`<div class="fld"><span class="lab">כיתה</span><div class="seg" role="group" aria-label="מספר כיתה">${nums.map(n=>`<button type="button" data-act="c" data-i="${i}" data-v="${n}" aria-pressed="${k.c===n}">${n}</button>`).join("")}</div></div>`:""}
+    ${k.g>=10?`<div class="fld"><span class="lab">מגמה</span>${TRACKS.map(([tn,ms])=>`<div class="track"><span class="tn">${tn}</span><div class="chips" role="group" aria-label="${tn}">${ms.map(([key,l])=>`<button type="button" data-act="m" data-i="${i}" data-v="${key}" aria-pressed="${k.m.includes(key)}">${l}</button>`).join("")}</div></div>`).join("")}<p class="fnote">בוחרים מגמה אחת. מבחנים של מגמות אחרות לא יוצגו.</p></div>`:""}
+    ${k.g?`<div class="fld"><label class="lab" for="kname${i}">שם (לא חובה, יופיע בלוח במקום הכיתה)</label><input type="text" class="kname" id="kname${i}" data-i="${i}" maxlength="16" placeholder="למשל: נועה" value="${esc(k.name||"")}"></div>`:""}
+  </div>`;
+}
+function renderSetup(){
+  const el=$("#setup"),sum=$("#summary");
+  if(!S.editing){
+    el.hidden=true;sum.hidden=false;
+    sum.innerHTML=S.kids.map((k,i)=>complete(k)?`<span class="kchip kc${i}"><b>${esc(kidLabel(k))}</b>${k.name&&k.name.trim()?" · "+classLabel(k):""}${k.m.length?" · "+k.m.map(x=>SHORT[x]).join(", "):""}</span>`:"").join("")+`<button type="button" class="btn small" data-act="edit" id="editbtn">שינוי כיתות</button>`;
+    return;
+  }
+  sum.hidden=true;el.hidden=false;
+  const ready=S.kids.some(complete);
+  el.innerHTML=`<h2>של מי הלוח?</h2><div class="kids">${S.kids.map(kidHTML).join("")}</div>
+    <div class="actions">${S.kids.length<MAXK?`<button type="button" class="btn" data-act="add" id="addkid">+ עוד ילד</button>`:""}
+    <button type="button" class="btn primary" data-act="done" id="done" ${ready?"":"disabled"}>הצגת הלוח</button>
+    ${ready?"":`<span class="msg">בוחרים שכבה וכיתה, והלוח מופיע למטה.</span>`}</div>`;
+}
+
+/* ---------- data for selected kids ---------- */
+function build(){
+  const kids=S.kids.map((k,i)=>Object.assign({},k,{i,subs:new Set(k.m.flatMap(x=>MSUB[x]||[]))})).filter(complete);
+  const days=new Map();
+  const get=d=>{if(!days.has(d))days.set(d,{items:[],notes:[]});return days.get(d)};
+  const add=(d,o)=>get(d).items.push(o);
+  const addNote=(d,txt,ki)=>{const v=get(d);let n=v.notes.find(x=>x.txt===txt);if(!n){n={txt,ks:new Set()};v.notes.push(n)}if(ki!=null)n.ks.add(ki)};
+  let hiddenMajor=0;
+  const inMonths=d=>S.months.includes(d.slice(0,7));
+  for(const r of DATA.events){
+    const [g,d,e,t,k,c,m,p,s,o,w]=r;
+    for(const kid of kids){
+      if(g!==kid.g)continue;
+      if(c.length&&!c.includes(kid.c))continue;
+      if(m.length){
+        if(!kid.m.length){if(inMonths(d))hiddenMajor++;continue}
+        if(m[0]!=="*"&&!m.some(x=>kid.subs.has(x)))continue;
+      }
+      let txt=s;
+      if(m.length>1&&w)txt=w+" – "+m.filter(x=>kid.subs.has(x)).map(x=>SUBJ[x]).join(", ");
+      if(t&&!txt.includes(t.split("–")[0]))txt+=" "+t;
+      const ds=e?rangeDates(d,e):[d];
+      ds.forEach((dd,j)=>add(dd,{kid:kid.i,txt:ds.length>1?`${txt} (יום ${j+1})`:txt,k,p:!!p,maj:m.length>0,o}));
+    }
+  }
+  for(const [d,e,txt,gs,alt] of DATA.notes){
+    for(const dd of (e?rangeDates(d,e):[d])){
+      if(!kids.length){if(!gs.length)addNote(dd,txt,null);continue}
+      for(const kid of kids){
+        if(!gs.length||gs.includes(kid.g))addNote(dd,txt,kid.i);
+        else if(alt)addNote(dd,alt,kid.i);
+      }
+    }
+  }
+  NK=kids.length;
+  return {days,kids,hiddenMajor};
+}
+const fmtTxt=s=>esc(s).replace(/(\d{1,2}:\d{2}–\d{1,2}:\d{2})/g,'<span class="tm">$1</span>');
+const ymd=d=>d.replace(/-/g,"");
+const nextDay=d=>{const x=pd(d);x.setDate(x.getDate()+1);return iso(x)};
+const evTitle=it=>kidLabel(S.kids[it.kid])+" · "+it.txt;
+function gUrl(it,d){return "https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(evTitle(it))+"&dates="+ymd(d)+"/"+ymd(nextDay(d))+"&details="+encodeURIComponent("לוח מבחנים כדורי"+(it.o?"\nביומן בית הספר: "+it.o:""))}
+function evHTML(it,withOrig,d){
+  const k=S.kids[it.kid];
+  const tags=(it.k==="t"?`<i class="tg trip">טיול</i>`:"")+(it.maj?`<i class="tg maj">מגמה</i>`:"")+(it.p?`<i class="tg part">חלקי</i>`:"");
+  const showOrig=withOrig&&(it.p||it.maj)&&it.o&&it.o.replace(/\s+/g," ")!==it.txt;
+  return `<div class="ev kc${it.kid} k-${it.k}" title="${esc(it.o||"")}"><b>${esc(kidLabel(k))}</b>${fmtTxt(it.txt)}${tags}${withOrig&&d?`<a class="gadd" href="${esc(gUrl(it,d))}" target="_blank" rel="noopener">+ Google</a>`:""}${showOrig?`<span class="orig">ביומן: ${esc(it.o)}</span>`:""}</div>`;
+}
+let NK=0;
+const noteText=n=>(!NK||n.ks.size>=NK)?n.txt:n.txt+" – "+[...n.ks].map(i=>kidLabel(S.kids[i])).join(", ");
+function counts(days,ym){let ex=0,tr=0;for(const [d,v] of days)if(d.startsWith(ym))for(const it of v.items){if(it.k==="x")ex++;else if(it.k==="t")tr++}return [ex,tr]}
+function useGrid(){if(S.view==="grid")return true;if(S.view==="list")return false;return window.innerWidth>=760}
+function monthHTML(ym,B){
+  const [y,m]=ym.split("-").map(Number);const [ex,tr]=counts(B.days,ym);
+  let h=`<section class="month"><div class="mh"><h2>${MN[m-1]} <span>${y}</span></h2>${B.kids.length?`<p>${ex} מבחנים${tr?` · ${tr} ימי טיול`:""}</p>`:""}</div>`;
+  if(useGrid()){
+    const first=new Date(y,m-1,1),start=new Date(first);start.setDate(1-first.getDay());
+    const last=new Date(y,m,0),end=new Date(last);end.setDate(last.getDate()+(6-last.getDay()));
+    h+=`<div class="gridwrap"><div class="grid" data-ym="${ym}">${WD.map((w,i)=>`<div class="wd"><span class="wl">${w}</span><span class="ws">${WDS[i]}</span></div>`).join("")}`;
+    for(const d=new Date(start);d<=end;d.setDate(d.getDate()+1)){
+      const ds=iso(d),inM=d.getMonth()===m-1,v=inM?B.days.get(ds):null;
+      const cls=["c"];if(!inM)cls.push("out");if(d.getDay()>=5)cls.push("we");if(v&&v.notes.length)cls.push("off");if(ds===today)cls.push("today");else if(inM&&ds<today)cls.push("past");
+      const has=v&&(v.items.length||v.notes.length);
+      h+=`<div class="${cls.join(" ")}${has?" has":""}"${has?` data-d="${ds}" role="button" tabindex="0" aria-label="${d.getDate()} ב${MN[m-1]}"`:""}><span class="n">${d.getDate()}</span>${v?v.notes.map(n=>`<div class="note">${esc(noteText(n))}</div>`).join("")+v.items.map(it=>evHTML(it,false)).join(""):""}</div>`;
+    }
+    h+=`</div></div><div class="daydetail" hidden></div>`;
+  }else{
+    const ds=[...B.days.keys()].filter(d=>d.startsWith(ym)).sort();
+    if(!ds.length)h+=`<div class="list"><div class="empty">אין מבחנים, טיולים או ימי חופש בחודש הזה.</div></div>`;
+    else{
+      h+=`<div class="list">`;
+      for(const d of ds){const v=B.days.get(d),dt=pd(d);
+        const cls=["row"];if(v.notes.length&&!v.items.length)cls.push("off");if(d===today)cls.push("today");else if(d<today)cls.push("past");
+        h+=`<div class="${cls.join(" ")}"><div class="d"><b>${dt.getDate()}</b><span>יום ${WDS[dt.getDay()]}</span></div><div class="body">${v.notes.map(n=>`<div class="note">${esc(noteText(n))}</div>`).join("")}${v.items.map(it=>evHTML(it,true,d)).join("")}</div></div>`;
+      }
+      h+=`</div>`;
+    }
+  }
+  return h+`</section>`;
+}
+function render(){
+  renderSetup();
+  $("#months").innerHTML=YEAR.map(ym=>{const m=+ym.slice(5);return `<button type="button" data-act="mo" data-v="${ym}" aria-pressed="${S.months.includes(ym)}">${MS[m-1]}${m===9||m===1?" "+ym.slice(2,4):""}</button>`}).join("")+`<button type="button" class="all" data-act="allmo">כל השנה</button>`;
+  const g=useGrid();$("#v-grid").setAttribute("aria-pressed",g);$("#v-list").setAttribute("aria-pressed",!g);
+  const B=build();
+  const sel=[...S.months].sort();
+  let h="";
+  if(!B.kids.length)h+=`<div class="hint">בוחרים למעלה שכבה וכיתה, והמבחנים והטיולים מופיעים בלוח. בינתיים מוצגים ימי החופש של כל בית הספר.</div>`;
+  else if(B.hiddenMajor)h+=`<div class="hint">יש ${B.hiddenMajor} מבחני מגמה בחודשים האלה שלא מוצגים, כי לא נבחרה מגמה. לוחצים על "שינוי כיתות" ומסמנים מגמה.</div>`;
+  h+=sel.map(ym=>monthHTML(ym,B)).join("");
+  $("#out").innerHTML=h;
+  updateShare(B);
+  save();
+}
+
+/* ---------- share ---------- */
+function token(){return S.kids.filter(complete).map(k=>`${k.g}-${k.c}${k.m.length?"-"+k.m.join("."):""}`).join("_")}
+const SITE="https://naveix12.github.io/kadoorie-calendar/";
+const feedPath=k=>k.g<10?`ics/k${k.g}-${k.c}.ics`:`ics/k${k.g}${k.m.length?"-"+k.m[0]:""}.ics`;
+function renderFeeds(B){
+  $("#feeds").innerHTML=B.kids.map(k=>{const p=feedPath(k),web="webcal://"+SITE.replace(/^https?:\/\//,"")+p;
+    return `<div class="feed kc${k.i}"><b>${esc(kidLabel(k))}</b>
+      <a class="btn small" href="${esc(web)}">אייפון</a>
+      <a class="btn small" href="${esc("https://calendar.google.com/calendar/r?cid="+web)}" target="_blank" rel="noopener">Google</a>
+      <a class="btn small" href="${esc(p)}" download>קובץ ‎.ics</a></div>`}).join("")
+    +(B.kids.some(k=>k.g>=10)?`<p class="fnote">בשכבות י׳–יב׳ היומן הוא לפי שכבה ומגמה. מבחן שהוא רק לכיתה מסוימת מסומן בסוגריים, למשל "(רק ליב9)".</p>`:"");
+}
+function updateShare(B){
+  renderFeeds(B);
+  const ok=!!BASE&&B.kids.length>0;
+  $("#calbtn").hidden=!B.kids.length;if(!B.kids.length)$("#calpanel").hidden=true;
+  $("#copy").hidden=!ok;$("#wa").hidden=!ok;
+  if(!ok){$("#shareout").hidden=true;return}
+  const link=BASE+"#"+token();
+  $("#sharelink").value=link;
+  const who=B.kids.map(k=>classLabel(k)).join(" ו־");
+  $("#wa").href="https://wa.me/?text="+encodeURIComponent(`לוח המבחנים והטיולים של ${who} בכדורי:\n${link}`);
+}
+$("#copy").addEventListener("click",()=>{
+  const link=$("#sharelink").value,box=$("#shareout"),msg=$("#sharemsg");
+  const fallback=()=>{box.hidden=false;const i=$("#sharelink");i.focus();i.select();msg.textContent="מסמנים ומעתיקים את הקישור"};
+  try{navigator.clipboard.writeText(link).then(()=>{box.hidden=false;msg.textContent="הקישור הועתק. מי שיפתח אותו יראה ישר את הכיתות האלה."},fallback)}catch(e){fallback()}
+});
+
+/* ---------- day detail (tap a day in the month grid) ---------- */
+function showDay(cell){
+  const grid=cell.closest(".grid"),box=grid.parentElement.nextElementSibling,d=cell.dataset.d;
+  grid.querySelectorAll(".c.sel").forEach(x=>x.classList.remove("sel"));
+  if(box.dataset.d===d&&!box.hidden){box.hidden=true;box.dataset.d="";return}
+  const B=build(),v=B.days.get(d);if(!v)return;const dt=pd(d);
+  cell.classList.add("sel");box.dataset.d=d;box.hidden=false;
+  box.innerHTML=`<div class="row"><div class="d"><b>${dt.getDate()}</b><span>יום ${WDS[dt.getDay()]}</span></div><div class="body">${v.notes.map(n=>`<div class="note">${esc(noteText(n))}</div>`).join("")}${v.items.map(it=>evHTML(it,true,d)).join("")}</div></div>`;
+  box.scrollIntoView({block:"nearest",behavior:"smooth"});
+}
+document.addEventListener("keydown",e=>{const c=e.target.closest&&e.target.closest(".grid .c.has");if(c&&(e.key==="Enter"||e.key===" ")){e.preventDefault();showDay(c)}});
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{
+  const cell=e.target.closest(".grid .c.has");if(cell&&!e.target.closest("a")){showDay(cell);return}
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const a=b.dataset.act,i=+b.dataset.i,v=b.dataset.v;
+  if(a==="g"){const k=S.kids[i];k.g=+v;if(k.g<10)k.m=[]}
+  else if(a==="c"){S.kids[i].c=+v}
+  else if(a==="m"){const k=S.kids[i];k.m=k.m.includes(v)?[]:[v]}
+  else if(a==="add"){if(S.kids.length<MAXK)S.kids.push({g:null,c:null,m:[],name:""})}
+  else if(a==="rm"){S.kids.splice(i,1);if(!S.kids.length)S.kids.push({g:null,c:null,m:[],name:""})}
+  else if(a==="done"){S.kids=S.kids.filter(complete);S.editing=false}
+  else if(a==="edit"){S.editing=true}
+  else if(a==="mo"){S.months=S.months.includes(v)?S.months.filter(x=>x!==v):S.months.concat(v);if(!S.months.length)S.months=[v]}
+  else if(a==="allmo"){S.months=YEAR.slice()}
+  else if(a==="view"){S.view=v}
+  else return;
+  render();
+  if(a==="done"){const t=$("#editbtn");if(t)t.focus({preventScroll:true})}
+});
+document.addEventListener("input",e=>{
+  if(e.target.classList.contains("kname")){const i=+e.target.dataset.i;S.kids[i].name=e.target.value.slice(0,16);save()}
+});
+let rz;window.addEventListener("resize",()=>{if(S.view)return;clearTimeout(rz);rz=setTimeout(render,150)});
+window.addEventListener("hashchange",()=>{const k=parseHash(location.hash);if(k){S.kids=k;S.editing=false;render()}});
+
+/* ---------- PDF (drawn on canvas, one A4 landscape page per month) ---------- */
+const PW=1123,PH=794,SC=2,M=30;
+function wrapLines(ctx,text,firstW,w){
+  const words=text.split(" ");const lines=[];let cur="",lim=firstW;
+  for(const wd of words){const t=cur?cur+" "+wd:wd;if(ctx.measureText(t).width<=lim||!cur){cur=t}else{lines.push(cur);cur=wd;lim=w}}
+  if(cur)lines.push(cur);return lines;
+}
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+const FB="KHeebo, Heebo, Arial, sans-serif",FD="KSecular, 'Secular One', KHeebo, Arial, sans-serif";
+function tagList(it){const t=[];if(it.k==="t")t.push(["טיול","trip"]);if(it.maj)t.push(["מגמה","maj"]);if(it.p)t.push(["חלקי","part"]);return t}
+const iso2=t=>t.replace(/(\d{1,2}:\d{2}–\d{1,2}:\d{2})/g,"\u2066$1\u2069");
+function layoutItem(ctx,it,w,fs){
+  const lh=fs*1.28;ctx.font=`800 ${fs}px ${FB}`;const lab=kidLabel(S.kids[it.kid]);const lw=ctx.measureText(lab).width+fs*.35;
+  ctx.font=`${it.k==="n"?700:600} ${fs}px ${FB}`;const lines=wrapLines(ctx,iso2(it.txt),w-lw,w);
+  ctx.font=`800 ${fs*.72}px ${FB}`;const tags=tagList(it).map(([t,c])=>({t,c,w:ctx.measureText(t).width+fs*.6}));
+  ctx.font=`${it.k==="n"?700:600} ${fs}px ${FB}`;
+  const lastW=ctx.measureText(lines[lines.length-1]).width+(lines.length===1?lw:0);
+  const tagsW=tags.reduce((a,t)=>a+t.w+4,0);
+  const tagLine=tags.length&&lastW+tagsW+6>w;
+  return {lab,lw,lines,tags,lh,fs,tagLine,lastW,h:(lines.length+(tagLine?1:0))*lh+fs*.45};
+}
+function drawItem(ctx,L,it,xr,y,w){
+  const [bg,bar,ink]=PAL[it.kid%PAL.length];const fs=L.fs;
+  ctx.fillStyle=bg;rr(ctx,xr-w-10,y,w+10,L.h,3);ctx.fill();ctx.fillStyle=bar;ctx.fillRect(xr-3,y,3,L.h);
+  let ty=y+fs*.22+fs;const x=xr-7;
+  ctx.font=`800 ${fs}px ${FB}`;ctx.fillStyle=ink;ctx.fillText(L.lab,x,ty);
+  ctx.font=`${it.k==="n"?700:600} ${fs}px ${FB}`;ctx.fillStyle=it.k==="n"?"#5d6862":"#1c2420";
+  L.lines.forEach((ln,j)=>{ctx.fillText(ln,j===0?x-L.lw:x,ty);if(j<L.lines.length-1)ty+=L.lh});
+  if(L.tags.length){
+    let tx=L.tagLine?x:x-L.lastW-6;if(L.tagLine)ty+=L.lh;
+    ctx.font=`800 ${fs*.72}px ${FB}`;
+    for(const t of L.tags){const th=fs*.95,top=ty-fs*.78;
+      if(t.c==="trip"){ctx.fillStyle="#2f7d32";rr(ctx,tx-t.w,top,t.w,th,2);ctx.fill();ctx.fillStyle="#fff"}
+      else{ctx.strokeStyle=t.c==="maj"?"#1f5f8b":"#7d8882";ctx.lineWidth=.8;rr(ctx,tx-t.w,top,t.w,th,2);ctx.stroke();ctx.fillStyle=t.c==="maj"?"#1f5f8b":"#5d6862"}
+      ctx.fillText(t.t,tx-fs*.3,top+th*.76);tx-=t.w+4;
+    }
+  }
+}
+function drawMonth(ym,B){
+  const cv=document.createElement("canvas");cv.width=PW*SC;cv.height=PH*SC;const ctx=cv.getContext("2d");ctx.scale(SC,SC);
+  ctx.fillStyle="#fff";ctx.fillRect(0,0,PW,PH);ctx.direction="rtl";ctx.textAlign="right";ctx.textBaseline="alphabetic";
+  const [y,m]=ym.split("-").map(Number);const [ex,tr]=counts(B.days,ym);
+  ctx.fillStyle="#1c2420";ctx.font=`400 38px ${FD}`;ctx.fillText(MN[m-1],PW-M,62);const mw=ctx.measureText(MN[m-1]).width;
+  ctx.fillStyle="#1f5f8b";ctx.font=`400 24px ${FD}`;ctx.fillText(String(y),PW-M-mw-12,62);
+  ctx.fillStyle="#5d6862";ctx.font=`400 13px ${FB}`;ctx.fillText(`מבחנים, טיולים וימי חופש · כדורי · ${ex} מבחנים${tr?` · ${tr} ימי טיול`:""}`,PW-M,84);
+  // legend (left side)
+  let lx=M;ctx.font=`800 13px ${FB}`;
+  const ks=B.kids.slice().reverse();
+  for(const k of ks){const lab=kidLabel(k)+(k.name&&k.name.trim()?" "+classLabel(k):"")+(k.m.length?" · "+k.m.map(x=>SHORT[x]).join(", "):"");const w=ctx.measureText(lab).width+20;const [bg,bar,ink]=PAL[k.i%PAL.length];
+    ctx.fillStyle=bg;rr(ctx,lx,46,w,22,4);ctx.fill();ctx.fillStyle=bar;ctx.fillRect(lx+w-4,46,4,22);ctx.fillStyle=ink;ctx.fillText(lab,lx+w-10,62);lx+=w+8}
+  ctx.font=`400 11px ${FB}`;ctx.fillStyle="#5d6862";
+  const lt="טיול = יציאה מבית הספר · מגמה = מבחן המגמה שנבחרה · חלקי = רק לחלק מהכיתה";ctx.fillText(lt,M+ctx.measureText(lt).width,86);
+  ctx.fillStyle="#1f5f8b";ctx.fillRect(M,96,PW-2*M,2);
+  // grid
+  const gy=106,hh=24,wts=[46,46,46,46,46,24,23],tot=277,GW=PW-2*M;const cw=wts.map(x=>x/tot*GW);
+  const xs=[];let xr=PW-M;for(let i=0;i<7;i++){xs.push(xr);xr-=cw[i]}
+  const first=new Date(y,m-1,1),start=new Date(first);start.setDate(1-first.getDay());
+  const last=new Date(y,m,0);const weeks=Math.ceil((first.getDay()+last.getDate())/7);
+  const gb=PH-M-16;const rh=(gb-gy-hh)/weeks;
+  ctx.fillStyle="#eef1ec";ctx.fillRect(M,gy,GW,hh);ctx.font=`700 12px ${FB}`;ctx.fillStyle="#5d6862";
+  WD.forEach((w,i)=>ctx.fillText(w,xs[i]-8,gy+16));
+  const d=new Date(start);
+  for(let r=0;r<weeks;r++)for(let c=0;c<7;c++){
+    const ds=iso(d),inM=d.getMonth()===m-1,v=inM?B.days.get(ds):null;const x0=xs[c]-cw[c],y0=gy+hh+r*rh;
+    ctx.fillStyle=!inM?"#fafbf8":(v&&v.notes.length)?"#e9ece6":c>=5?"#f3f5f1":"#ffffff";ctx.fillRect(x0,y0,cw[c],rh);
+    ctx.font=`800 14px ${FB}`;ctx.fillStyle=inM?"#1c2420":"#c9d0cb";ctx.fillText(String(d.getDate()),xs[c]-7,y0+18);
+    if(v){
+      let yy=y0+24;const iw=cw[c]-12;
+      ctx.font=`700 11px ${FB}`;ctx.fillStyle="#5d6862";
+      for(const n of v.notes){const ls=wrapLines(ctx,noteText(n),iw,iw);for(const l of ls){yy+=12;ctx.fillText(l,xs[c]-7,yy)}yy+=3}
+      if(v.items.length){
+        let fsz=[11.5,10.5,9.5,8.8],Ls,f;
+        for(f of fsz){Ls=v.items.map(it=>layoutItem(ctx,it,iw-10,f));const need=Ls.reduce((a,L)=>a+L.h+3,0);if(yy+need<=y0+rh-3)break}
+        yy+=2;let shown=0;
+        for(let j=0;j<v.items.length;j++){const L=Ls[j];if(yy+L.h>y0+rh-3&&j>0){break}drawItem(ctx,L,v.items[j],xs[c]-6,yy,iw-10);yy+=L.h+3;shown++}
+        if(shown<v.items.length){ctx.font=`700 10px ${FB}`;ctx.fillStyle="#5d6862";ctx.fillText(`+ עוד ${v.items.length-shown}`,xs[c]-7,y0+rh-4)}
+      }
+    }
+    d.setDate(d.getDate()+1);
+  }
+  // grid lines
+  ctx.strokeStyle="#c3cbc5";ctx.lineWidth=.8;ctx.strokeRect(M,gy,GW,gb-gy);
+  ctx.beginPath();for(let i=1;i<7;i++){const x=xs[i];ctx.moveTo(x,gy);ctx.lineTo(x,gb)}
+  ctx.moveTo(M,gy+hh);ctx.lineTo(PW-M,gy+hh);for(let r=1;r<weeks;r++){const yy=gy+hh+r*rh;ctx.moveTo(M,yy);ctx.lineTo(PW-M,yy)}ctx.stroke();
+  // footer
+  ctx.font=`400 10px ${FB}`;ctx.fillStyle="#5d6862";
+  ctx.fillText(`מקור: יומני השכבות של כדורי, מעודכן ל־${DATA.asOf}. בית הספר מעדכן את היומנים מדי פעם, אז כדאי לבדוק מועד חשוב גם באתר.`,PW-M,PH-M+6);
+  return cv;
+}
+function makePdf(pages){
+  const enc=new TextEncoder();const parts=[];let len=0;const offs=[];
+  const push=x=>{const b=typeof x==="string"?enc.encode(x):x;parts.push(b);len+=b.length};
+  push("%PDF-1.4\n");push(new Uint8Array([37,226,227,207,211,10]));
+  const n=pages.length,obj=(id,f)=>{offs[id]=len;push(id+" 0 obj\n");f();push("\nendobj\n")};
+  obj(1,()=>push("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2,()=>push(`<< /Type /Pages /Kids [${pages.map((_,i)=>(3+i*3)+" 0 R").join(" ")}] /Count ${n} >>`));
+  pages.forEach((p,i)=>{const pid=3+i*3,cid=pid+1,iid=pid+2;const cs=`q 842 0 0 595 0 0 cm /Im${i} Do Q`;
+    obj(pid,()=>push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /XObject << /Im${i} ${iid} 0 R >> >> /Contents ${cid} 0 R >>`));
+    obj(cid,()=>{push(`<< /Length ${cs.length} >>\nstream\n`);push(cs);push("\nendstream")});
+    obj(iid,()=>{push(`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.bytes.length} >>\nstream\n`);push(p.bytes);push("\nendstream")});
+  });
+  const total=3+n*3,xref=len;let x=`xref\n0 ${total}\n0000000000 65535 f \n`;
+  for(let i=1;i<total;i++)x+=String(offs[i]).padStart(10,"0")+" 00000 n \n";
+  push(x);push(`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+  return new Blob(parts,{type:"application/pdf"});
+}
+async function buildPdf(){
+  try{await Promise.all([document.fonts.load(`400 16px KHeebo`,"אב"),document.fonts.load(`700 16px KHeebo`,"אב"),document.fonts.load(`800 16px KHeebo`,"אב"),document.fonts.load(`16px KSecular`,"אב")])}catch(e){}
+  const B=build();const pages=[];
+  for(const ym of [...S.months].sort()){
+    const cv=drawMonth(ym,B);
+    const blob=await new Promise(r=>cv.toBlob(r,"image/jpeg",.92));
+    pages.push({w:cv.width,h:cv.height,bytes:new Uint8Array(await blob.arrayBuffer())});
+  }
+  return makePdf(pages);
+}
+$("#calbtn").addEventListener("click",()=>{const p=$("#calpanel");p.hidden=!p.hidden;$("#calbtn").setAttribute("aria-expanded",String(!p.hidden))});
+window.__kad={buildPdf,drawMonth:ym=>drawMonth(ym,build()),state:()=>S};
+const DL={save:async({filename,data})=>{const url=URL.createObjectURL(data instanceof Blob?data:new Blob([data]));const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),8000);return {status:"saved"}}};
+$("#pdf").hidden=false;
+$("#pdf").addEventListener("click",async()=>{
+  if(!DL)return;const btn=$("#pdf"),msg=$("#pdfmsg");
+  const B=build();if(!B.kids.length){msg.textContent="קודם בוחרים כיתה.";return}
+  btn.disabled=true;msg.textContent="מכין את הקובץ…";
+  try{
+    const blob=await buildPdf();
+    const name="לוח מבחנים כדורי "+B.kids.map(k=>classLabel(k)).join(" ")+".pdf";
+    msg.textContent="";
+    await DL.save({filename:name,data:blob});
+    msg.textContent="הקובץ ירד.";
+  }catch(e){
+    const c=e&&e.code;
+    msg.textContent=c==="declined"?"":c==="rate_limited"?"רגע, יש כבר חלון שמירה פתוח.":"לא הצלחתי לשמור את הקובץ כאן. אפשר לנסות שוב מהמחשב.";
+  }finally{btn.disabled=false}
+});
+
+render();
+})();
+</script>
+</body>
+</html>
