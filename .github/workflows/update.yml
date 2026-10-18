@@ -1,0 +1,38 @@
+name: Update calendar
+
+on:
+  schedule:
+    - cron: "0 4 */3 * *"   # every 3 days at 04:00 UTC (07:00 in Israel)
+  workflow_dispatch:         # "Run workflow" button for a manual update
+  push:
+    branches: [main]
+    paths: ["tools/**", ".github/workflows/**"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build site from the school calendars
+        run: python3 tools/build.py --out _site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
